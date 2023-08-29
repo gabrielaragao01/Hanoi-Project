@@ -1,5 +1,5 @@
 # - Torre de Hanoi - 
-### Projeto da Cadeira de OCSO - "Organização de Computadores e Sistemas Operacionais" (IF974)
+### Projeto de OCSO - "Organização de Computadores e Sistemas Operacionais" (IF974)
  - Algorítmo Recursivo da Torre de Hanói
  - ASSEMBLY
  - Dev-c++
