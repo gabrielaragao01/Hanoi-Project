@@ -8,7 +8,7 @@ includelib \masm32\lib\kernel32.lib
 includelib \masm32\lib\masm32.lib
 
 .data
-    message db "Secso!!!", 0
+    message db "Diogo é feio", 0
 
 .code 
 main:
