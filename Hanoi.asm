@@ -17,57 +17,58 @@ includelib \masm32\lib\masm32.lib
 .code
 main:
     ; Chame a função recursiva da Torre de Hanói aqui
-    invoke hanoi, disc, addr origem, addr auxiliar, addr destino
+    push disc                   ; Empilha o número de discos
+    push offset destino         ; Empilha o pino de destino
+    push offset auxiliar        ; Empilha o pino auxiliar
+    push offset origem          ; Empilha o pino de origem
+    call hanoi                 ; Chama a função hanoi
+
+    ; Limpe a pilha
+    add esp, 16
 
     ; Termina o programa
     invoke ExitProcess, 0
 
 hanoi PROC
-    ; Receba os parâmetros: disc, origem, auxiliar, destino
-    push ebp        ; salva o registrador ebp na pilha 
-    mov ebp, esp    ; ebp recebe o endereço do topo da pilha
 
-    ; Parâmetros:
-    ; [ebp+8] = disc (número de discos)
-    ; [ebp+12] = origem (pino de origem)
-    ; [ebp+16] = auxiliar (pino auxiliar)
-    ; [ebp+20] = destino (pino de destino)
+        ;[ebp+8] = n (número de discos iniciais) 
+        ;[ebp+12] = pino de origem
+        ;[ebp+16] = pino de auxilio
+        ;[ebp+20] = pino de destino
 
-    ; Verifique o caso base: se disc for igual a 1, mova o disco da origem para o destino
-    cmp dword ptr [ebp+8], 1
-    je caso_base   
-    
-    ; Caso contrário, siga os passos da recursão
+        push ebp                        ; salva o registrador ebp na pilha
+        mov ebp,esp                     ; ebp recebe o endereço do topo da pilha
 
-    ; PASSO 1: Mova n - 1 discos do pino de origem para o pino auxiliar, usando o pino de destino como pino auxiliar
-    ; Chame recursivamente a função hanoi
-    ; Você precisará trocar origem e auxiliar como parte do processo
-    push dword ptr [ebp+16]     ; Pino auxiliar
-    push dword ptr [ebp+20]     ; Pino destino
-    push dword ptr [ebp+12]     ; Pino origem
-    push dword ptr [ebp+8] - 1 ; n - 1 (um disco a menos)
-    call hanoi
+        mov eax,[ebp+8]                 ; pega o a posição do primeiro elemento da pilha e mov para eax
+        cmp eax,0x0                     ; cmp faz o comparativo do valor que estar em eax com 0x0 = 0 em hexadecimal 
+        jle fim                         ; se eax for menor ou igual a 0, vai para o fim, desempilhar
+        
+        ;PASSO1 - RECURSIVIDADE
+        dec eax                         ; decrementa 1 de eax
+        push dword [ebp+16]             ; coloca na pilha o pino de auxilio
+        push dword [ebp+20]             ; coloca na pilha o pino de destino
+        push dword [ebp+12]             ; coloca na pilha o pino de origem
+        push dword eax                  ; poe eax na pilha como parâmetro n, já com -1 para a recursividade
+        call funcaoHanoi                ; Chama a mesma função (recursividade)
 
-    ; PASSO 2: Mova o disco restante (o maior) do pino de origem para o pino de destino
-    ; Use instruções como mov ou outras para realizar essa operação
-    ; Imprima os movimentos dos discos, se desejar
+        ;PASSO2 - MOVER PINO E IMPRIMIR
+        add esp,12                      ; libera mais 12 bits de espaço (20 - 8) Último e primeiro parâmetro
+        push dword [ebp+16]             ; pega o pino de origem referenciado pelo parâmetro ebp+16
+        push dword [ebp+12]             ; coloca na pilha o pino de origem
+        push dword [ebp+8]              ; coloca na pilha o pino de o numero de disco inicial
+        call imprime                    ; Chama a função 'imprime'
+        
+        ;PASSO3 - RECURSIVIDADE
+        add esp,12                      ; libera mais 12 bits de espaço (20 - 8) Último e primeiro parâmetro
+        push dword [ebp+12]             ; coloca na pilha o pino de origem
+        push dword [ebp+16]             ; coloca na pilha o pino de auxilio
+        push dword [ebp+20]             ; coloca na pilha o pino de destino
+        mov eax,[ebp+8]                 ; move para o registrador eax o espaço reservado ao número de discos atuais
+        dec eax                         ; decrementa 1 de eax
 
-    ; PASSO 3: Mova os n - 1 discos do pino auxiliar para o pino de destino, usando o pino de origem como pino auxiliar
-    ; Chame recursivamente a função hanoi novamente
-    ; Novamente, você precisará trocar origem e auxiliar como parte do processo
-    push dword ptr [ebp+12]     ; Pino origem
-    push dword ptr [ebp+16]     ; Pino auxiliar
-    push dword ptr [ebp+20]     ; Pino destino
-    push dword ptr [ebp+8] - 1 ; n - 1 (um disco a menos)
-    call hanoi
+    push dword eax                      ; poe eax na pilha
 
-caso_base:
-    ; Implemente o código para mover um disco da origem para o destino
-    ; Você pode imprimir os movimentos dos discos, se desejar
-
-    ; Termina a função
-    pop ebp
-    ret
+        call hanoi
 hanoi ENDP
 
 
