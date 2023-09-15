@@ -1,3 +1,4 @@
+
 .386
 .model flat, stdcall
 option casemap:none
@@ -8,94 +9,66 @@ includelib \masm32\lib\kernel32.lib
 includelib \masm32\lib\masm32.lib
 
 .data
-    message db "Algoritmo da Torre de Hanoi com 3 discos", 0
-    buffer db 11 dup(0)
-    newline db 10, 0
+    disc dd 3                 ; Número de discos
+    origem db "A", 0          ; Pino de origem
+    auxiliar db "B", 0        ; Pino auxiliar
+    destino db "C", 0         ; Pino de destino
 
 .code
-main PROC
-    ; Exibe o título do algoritmo
-    invoke StdOut, addr message
-
-    ; Chama a função recursiva para resolver a Torre de Hanoi
-    push eax
-    push ebx
-    push ecx
-    push edx
-    mov eax, 3        ; Número de discos
-    mov ebx, 1        ; Pino de origem (A)
-    mov ecx, 2        ; Pino auxiliar (B)
-    mov edx, 3        ; Pino de destino (C)
-    call Hanoi
-    pop edx
-    pop ecx
-    pop ebx
-    pop eax
+main:
+    ; Chame a função recursiva da Torre de Hanói aqui
+    invoke hanoi, disc, addr origem, addr auxiliar, addr destino
 
     ; Termina o programa
     invoke ExitProcess, 0
-main ENDP
 
-Hanoi PROC
+hanoi PROC
+    ; Receba os parâmetros: disc, origem, auxiliar, destino
+    push ebp        ; salva o registrador ebp na pilha
+    mov ebp, esp    ; ebp recebe o endereço do topo da pilha
+
     ; Parâmetros:
-    ;   EAX: Número de discos
-    ;   EBX: Pino de origem
-    ;   ECX: Pino auxiliar
-    ;   EDX: Pino de destino
-    ; Usos:
-    ;   ESI, EDI
+    ; [ebp+8] = disc (número de discos)
+    ; [ebp+12] = origem (pino de origem)
+    ; [ebp+16] = auxiliar (pino auxiliar)
+    ; [ebp+20] = destino (pino de destino)
 
-    cmp eax, 1            ; Caso base: um disco
-    je  Done
+    ; Verifique o caso base: se disc for igual a 1, mova o disco da origem para o destino
+    cmp dword ptr [ebp+8], 1
+    je caso_base
 
-    ; Move (N-1) discos do pino de origem para o pino auxiliar,
-    ; usando o pino de destino como auxiliar
-    push eax
-    dec eax
-    push edx
-    push ecx
-    push ebx
-    call Hanoi
+    ; Caso contrário, siga os passos da recursão
 
-    ; Move o maior disco para o pino de destino
-    pop ebx
-    pop ecx
-    pop edx
-    push eax
-    push ebx
-    push edx
-    call DisplayMove
-    pop edx
-    pop ebx
-    pop eax
+    ; PASSO 1: Mova n - 1 discos do pino de origem para o pino auxiliar, usando o pino de destino como pino auxiliar
+    ; Chame recursivamente a função hanoi
+    ; Você precisará trocar origem e auxiliar como parte do processo
+    push dword ptr [ebp+16]     ; Pino auxiliar
+    push dword ptr [ebp+20]     ; Pino destino
+    push dword ptr [ebp+12]     ; Pino origem
+    push dword ptr [ebp+8] - 1 ; n - 1 (um disco a menos)
+    call hanoi
 
-    ; Move (N-1) discos do pino auxiliar para o pino de destino,
-    ; usando o pino de origem como auxiliar
-    push ebx
-    push ecx
-    push edx
-    push eax
-    dec eax
-    call Hanoi
+    ; PASSO 2: Mova o disco restante (o maior) do pino de origem para o pino de destino
+    ; Use instruções como mov ou outras para realizar essa operação
+    ; Imprima os movimentos dos discos, se desejar
 
-Done:
+    ; PASSO 3: Mova os n - 1 discos do pino auxiliar para o pino de destino, usando o pino de origem como pino auxiliar
+    ; Chame recursivamente a função hanoi novamente
+    ; Novamente, você precisará trocar origem e auxiliar como parte do processo
+    push dword ptr [ebp+12]     ; Pino origem
+    push dword ptr [ebp+16]     ; Pino auxiliar
+    push dword ptr [ebp+20]     ; Pino destino
+    push dword ptr [ebp+8] - 1 ; n - 1 (um disco a menos)
+    call hanoi
+
+caso_base:
+    ; Implemente o código para mover um disco da origem para o destino
+    ; Você pode imprimir os movimentos dos discos, se desejar
+
+    ; Termina a função
+    pop ebp
     ret
-Hanoi ENDP
+hanoi ENDP
 
-DisplayMove PROC
-    ; Parâmetros:
-    ;   EAX: Número do disco (1, 2, 3, ...)
-    ;   EBX: Pino de origem
-    ;   EDX: Pino de destino
-
-    pushad               ; Salva todos os registradores
-    invoke StdOut, addr buffer
-    invoke dwtoa, EAX, addr buffer
-    invoke StdOut, addr buffer
-    invoke StdOut, addr buffer
-    invoke StdOut, addr buffer
-    popad                ; Restaura todos os registradores
-    ret
-DisplayMove ENDP
 
 end main
