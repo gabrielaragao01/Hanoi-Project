@@ -24,7 +24,7 @@ main:
 
 hanoi PROC
     ; Receba os parâmetros: disc, origem, auxiliar, destino
-    push ebp        ; salva o registrador ebp na pilha
+    push ebp        ; salva o registrador ebp na pilha 
     mov ebp, esp    ; ebp recebe o endereço do topo da pilha
 
     ; Parâmetros:
@@ -35,8 +35,8 @@ hanoi PROC
 
     ; Verifique o caso base: se disc for igual a 1, mova o disco da origem para o destino
     cmp dword ptr [ebp+8], 1
-    je caso_base
-
+    je caso_base   
+    
     ; Caso contrário, siga os passos da recursão
 
     ; PASSO 1: Mova n - 1 discos do pino de origem para o pino auxiliar, usando o pino de destino como pino auxiliar
