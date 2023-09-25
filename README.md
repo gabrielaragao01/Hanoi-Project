@@ -7,12 +7,13 @@ Este repositório é dedicado ao desenvolvimento de um algoritmo para solucionar
 O objetivo deste projeto é criar uma implementação que utiliza a linguagem Assembly para desenvolver uma solução recursiva para o problema da Torre de Hanoi.
 
 ## Como rodar :arrow_forward:
-- Certifique-se que o MASM32 está instalado na sua máquina;
-- Clone os arquivos do repositório no GitHub para obter os códigos;
-- Abra o terminal e encontre o caminho em que foi instalado;
-- Execute o programa "compile.bat" no seu terminal.
+- Utilize o compilador Nasm x86 de sua preferência;
+- Sugestão de compilador online: http://www.tutorialspoint.com/compile_assembly_online.php;
+- Execute o programa e verifique a saída do Terminal.
 
 ## Contribuidores 🤓
  - Gabriel Aragão
  - Diogo Nogueira
 
+## Professor 📏
+ - Sergio Vanderlei Cavalcante
