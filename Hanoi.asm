@@ -1,18 +1,18 @@
 ; Agradecimentos: https://mentebinaria.gitbook.io/assembly/a-base/registradores-de-proposito-geral
 
-section .text                           ; Usada para armazenar o código executável do nosso programa
+section .text                         ; Usada para armazenar o código executável do nosso programa
 
-    global _start                       ; Inicio do código
+    global _start                     ; Inicio do código
 
 
-    _start:                             ; iniciando
+    _start:                           ; iniciando
 
-        push ebp                        ; empurra o registrador ebp na pilha (para ser a base)
-        mov ebp, esp                    ; aponta o ponteiro do topo da pilha (esp) para a base
+        push ebp                      ; empurra o registrador ebp na pilha (para ser a base)
+        mov ebp, esp                  ; aponta o ponteiro do topo da pilha (esp) para a base
 
-        mov eax, 7                      ; Definindo o número de discos que terá na torre A
+        mov eax, 7                    ; Definindo o número de discos que terá na torre A
         
-         ; para ficar "brincando" de auxiliar ganhar o valor de destino e destino ganhar valor de auxiliar, é necessario colocar os valores na pilha
+        ; para ficar "brincando" de auxiliar ganhar o valor de destino e destino ganhar valor de auxiliar, é necessario colocar os valores na pilha
 
         ; Empurrando as torres e a quantidade de discos na pilha de referencia para que fiquem em ordem
         push dword 2                  ; Torre Auxiliar
@@ -38,84 +38,84 @@ section .text                           ; Usada para armazenar o código execut�
         ;[ebp+16] = Torre de trabalho
         ;[ebp+20] = Torre de destino
 
-        push ebp                        ; empurra o registrador ebp na pilha (para ser a base)
-        mov ebp,esp                     ; aponta o ponteiro do topo da pilha (esp) para a base
+        push ebp                      ; empurra o registrador ebp na pilha (para ser a base)
+        mov ebp,esp                   ; aponta o ponteiro do topo da pilha (esp) para a base
 
-        mov eax, [ebp+8]                ; move para o registrador ax o numero de discos na Torre de origem
+        mov eax, [ebp+8]              ; move para o registrador ax o numero de discos na Torre de origem
         
-        cmp eax, 0                      ; verifica se Ainda há disco a ser movido na torre de origem
-        je desempilhar                  ; caso nao tenha nunhum disco, pula para desempilhar
+        cmp eax, 0                    ; verifica se Ainda há disco a ser movido na torre de origem
+        je desempilhar                ; caso nao tenha nunhum disco, pula para desempilhar
         
         ; Primeira recursividade    
-        push dword [ebp+16]             ; Empurra a torre Auxiliar
-        push dword [ebp+20]             ; Empurra a torre Destino
-        push dword [ebp+12]             ; Empurra a torre Origem
+        push dword [ebp+16]           ; Empurra a torre Auxiliar
+        push dword [ebp+20]           ; Empurra a torre Destino
+        push dword [ebp+12]           ; Empurra a torre Origem
         
-        dec eax                         ; tira o disco do topo da torre de origem para ser colocado outra torre
-        push dword eax                  ; empurra o numero de discos restantes a serem movidos na Torre de origem
+        dec eax                       ; tira o disco do topo da torre de origem para ser colocado outra torre
+        push dword eax                ; empurra o numero de discos restantes a serem movidos na Torre de origem
         
-        call hanoi                      ; chama a label hanoi para guardar a linha de retorno (recursao)
+        call hanoi                    ; chama a label hanoi para guardar a linha de retorno (recursao)
         
-        add esp,16                      ; após retornar da chamada da label hanoi, remove o "lixo" da pilha que está ocupando espaço na memoria
+        add esp,16                    ; após retornar da chamada da label hanoi, remove o "lixo" da pilha que está ocupando espaço na memoria
 
 
         ; Printando os movimentos
-        push dword [ebp+16]             ; empilha o pino de destino
-        push dword [ebp+12]             ; empilha o pino de saida
-        push dword [ebp+8]              ; empilha o disco
+        push dword [ebp+16]           ; empilha o torre de Saida
+        push dword [ebp+12]           ; empilha o torre de Ida
+        push dword [ebp+8]            ; empilha o disco
         
-        call imprime                    ; chama a label para imprimir os movimentos
+        call imprime                  ; chama a label para imprimir os movimentos
         
-        add esp, 12                      ; após retornar da chamada da label hanoi, remove o "lixo" da pilha que está ocupando espaço na memoria
+        add esp, 12                   ; após retornar da chamada da label hanoi, remove o "lixo" da pilha que está ocupando espaço na memoria
         
         
         ; Segunda recursividade
-        push dword [ebp+12]             ; Empurra a torre Origem
-        push dword [ebp+16]             ; Empurra a torre Trabalho
-        push dword [ebp+20]             ; Empurra a torre Destino
+        push dword [ebp+12]           ; Empurra a torre Origem
+        push dword [ebp+16]           ; Empurra a torre Trabalho
+        push dword [ebp+20]           ; Empurra a torre Destino
         
-        mov eax, [ebp+8]                ; move para o registrador eax o número de discos restantes
+        mov eax, [ebp+8]              ; move para o registrador eax o número de discos restantes
         
-        dec eax                         ; tira o disco do topo da torre de origem para ser colocado outra torre
-        push dword eax                  ; empurra o numero de discos restantes a serem movidos na Torre de origem
+        dec eax                       ; tira o disco do topo da torre de origem para ser colocado outra torre
+        push dword eax                ; empurra o numero de discos restantes a serem movidos na Torre de origem
     
-        call hanoi                      ; chama a label hanoi para guardar a linha de retorno (recursao)
+        call hanoi                    ; chama a label hanoi para guardar a linha de retorno (recursao)
 
     desempilhar: 
 
-        mov esp, ebp                    ; aponta o ponteiro da base da pilha (ebp) para o topo
-        pop ebp                         ; tira o elemento do topo da pilha e guarda o valor em ebp
-        ret                             ; retira o ultimo valor do topo da pilha e da um jump para ele (a linha de retorno nesse caso)
+        mov esp, ebp                  ; aponta o ponteiro da base da pilha (ebp) para o topo
+        pop ebp                       ; tira o elemento do topo da pilha e guarda o valor em ebp
+        ret                           ; retira o ultimo valor do topo da pilha e da um jump para ele (a linha de retorno nesse caso)
 
     imprime:
 
-        push ebp                        ; empurra o registrador ebp na pilha (para ser a base)
-        mov ebp, esp                    ; aponta o ponteiro do topo da pilha (esp) para a base
+        push ebp                      ; empurra o registrador ebp na pilha (para ser a base)
+        mov ebp, esp                  ; aponta o ponteiro do topo da pilha (esp) para a base
         
-        mov eax, [ebp + 8]              ; coloca no registrador ax o disco a ser movido
-        add al, 48                      ; conversao na tabela ASCII
-        mov [disco], al                 ; coloca o valor no [disco] para o print
+        mov eax, [ebp + 8]            ; coloca no registrador ax o disco a ser movido
+        add al, 48                    ; conversao na tabela ASCII
+        mov [disco], al               ; coloca o valor no [disco] para o print
 
-        mov eax, [ebp + 12]             ; coloca no registrador ax a torre de onde o disco saiu
-        add al, 64                      ; conversao na tabela ASCII
-        mov [torre_saida], al           ; coloca o valor no [torre_saida] para o print
+        mov eax, [ebp + 12]           ; coloca no registrador ax a torre de onde o disco saiu
+        add al, 64                    ; conversao na tabela ASCII
+        mov [torre_saida], al         ; coloca o valor no [torre_saida] para o print
 
-        mov eax, [ebp + 16]             ; coloca no registrador ax a torre de onde o disco foi
-        add al, 64                      ; conversao na tabela ASCII
-        mov [torre_ida], al             ; coloca o valor no [torre_ida] para o print
+        mov eax, [ebp + 16]           ; coloca no registrador ax a torre de onde o disco foi
+        add al, 64                    ; conversao na tabela ASCII
+        mov [torre_ida], al           ; coloca o valor no [torre_ida] para o print
 
-        mov edx, lenght                 ; tamanho da mensagem
-        mov ecx, msg                    ; mensagem em si
-        mov ebx, 1                      ; dá permissão para a saida
-        mov eax, 4                      ; informa que será uma escrita
-        int 128                         ; Interrupção para kernel
+        mov edx, lenght               ; tamanho da mensagem
+        mov ecx, msg                  ; mensagem em si
+        mov ebx, 1                    ; dá permissão para a saida
+        mov eax, 4                    ; informa que será uma escrita
+        int 128                       ; Interrupção para kernel
 
-        mov     esp, ebp                ; aponta o ponteiro da base da pilha (ebp) para o topo
-        pop     ebp                     ; tira o elemento do topo da pilha e guarda o valor em ebp
-        ret                             ; retira o ultimo valor do topo da pilha e da um jump para ele (a linha de retorno nesse caso)
+        mov     esp, ebp              ; aponta o ponteiro da base da pilha (ebp) para o topo
+        pop     ebp                   ; tira o elemento do topo da pilha e guarda o valor em ebp
+        ret                           ; retira o ultimo valor do topo da pilha e da um jump para ele (a linha de retorno nesse caso)
 
 ; Declaração de dados: 
-section .data   ; Usada para armazenar dados inicializados do programa, por exemplo uma variável global.
+section .data                         ; Usada para armazenar dados inicializados do programa, por exemplo uma variável global.
 
     ; Definindo a mensagem
     msg:
