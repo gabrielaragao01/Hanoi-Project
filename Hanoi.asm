@@ -19,14 +19,14 @@ section .text                           ; Usada para armazenar o código execut�
         push dword 3                  ; Torre Destino
         push dword 1                  ; Torre Origem
         
-        push eax                        ; 7 -> numero inicial de discos
+        push eax                      ; 7 -> numero inicial de discos
 
-        call hanoi                 ; Chamando a label Hanoi
+        call hanoi                    ; Chamando a label Hanoi
 
         ; Gerando uma interrupçao para a finalizaçao do programa
-        mov eax, 1                      ; Parametro de saida do sistema
-        mov ebx, 0                      ; Parametro para utilizar a saida padrão  
-        int 128                         ; Interrupção Kernel 
+        mov eax, 1                    ; Parametro de saida do sistema
+        mov ebx, 0                    ; Parametro para utilizar a saida padrão  
+        int 128                       ; Interrupção Kernel 
 
 
 
