@@ -10,6 +10,7 @@ O objetivo deste projeto é criar uma implementação que utiliza a linguagem As
 - Utilize o compilador Nasm x86(32bits) de sua preferência;
 - Sugestão de compilador online: http://www.tutorialspoint.com/compile_assembly_online.php;
 - Execute o programa e verifique a saída do Terminal.
+- Link de visualização: https://www.mathsisfun.com/games/towerofhanoi.html
 
 ## Contribuidores 🤓
  - Gabriel Aragão
