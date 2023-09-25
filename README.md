@@ -7,7 +7,7 @@ Este repositório é dedicado ao desenvolvimento de um algoritmo para solucionar
 O objetivo deste projeto é criar uma implementação que utiliza a linguagem Assembly para desenvolver uma solução recursiva para o problema da Torre de Hanoi.
 
 ## Como rodar :arrow_forward:
-- Utilize o compilador Nasm x86 de sua preferência;
+- Utilize o compilador Nasm x86(32bits) de sua preferência;
 - Sugestão de compilador online: http://www.tutorialspoint.com/compile_assembly_online.php;
 - Execute o programa e verifique a saída do Terminal.
 
